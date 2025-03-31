@@ -1,13 +1,30 @@
-# Репозиторий к семинару "Основы backend-разработки"
+# Домашнее задание к семинару "Основы backend-разработки"
 
-## Что нужно сделать перед семинаром?
+## Инструкция по запуску
 #### Собрать проект на виртуалке
 1. зайти на виртуалку и склонировать на нее склонировать этот репозиторий
 2. выполнить команду `docker build -t ds-backend .`
 3. запустить сервис командой `./run.sh`
-4. открыть в браузере страничку *http://<vm_ip>:8080* и проверить, что выводится слово *"Hello"* 
 
-#### Настроить VS Code для удаленного редактирования
-1. установить VS Code на свою машину
-2. установить в VS Code расширение "Remote - SSH" - [инструкция](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) (раздел "Getting started")
-3. открыть проект в VS Code через Remote SSH
+#### Тестирование
+
+1. Получить номер
+```
+curl -s http://localhost:8080/read_plate/10022 | jq
+```
+2. Получить несколько номеров
+```
+curl -s -X POST -H "Content-Type: application/json" -d '{"image_ids": [10022, 9965]}' http://localhost:8080/batch_read_plates | jq
+```
+3. Невалидный URL
+```
+curl http://localhost:8080/read_plate/abc
+```
+4. Невалидная картинка
+```
+curl http://localhost:8080/read_plate/99999
+```
+5. Параллельное выполнение
+```
+curl -s http://localhost:8080/read_plate/10022 | jq & curl -s http://localhost:8080/read_plate/9965 | jq
+```
